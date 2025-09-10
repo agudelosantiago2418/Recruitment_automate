@@ -12,15 +12,18 @@ import org.openqa.selenium.WebDriver;
 import screenplay.questions.CandidateStatus;
 import screenplay.tasks.AddCandidate;
 import screenplay.tasks.Login;
+import screenplay.pages.RecruitmentPage;
 
 import java.util.Map;
 
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
+import static net.serenitybdd.screenplay.actions.Click.on;
+import static net.serenitybdd.screenplay.actions.Enter.theValue;
 import static org.hamcrest.Matchers.equalTo;
 
 public class RecruitmentSteps {
 
-    @Managed(driver = "chrome")
+    @Managed(driver = "firefox")
     WebDriver driver;
 
     Actor reclutador;
@@ -33,7 +36,7 @@ public class RecruitmentSteps {
 
     @Dado("que el reclutador ingresa al sistema OrangeHRM")
     public void queElReclutadorIngresaAlSistemaOrangeHRM() {
-        // El setup ya está realizado
+        // Preparación ya realizada en @Before
     }
 
     @Cuando("inicia sesión con credenciales válidas")
@@ -43,20 +46,59 @@ public class RecruitmentSteps {
         );
     }
 
+    @Cuando("navega al módulo de Recruitment")
+    public void navegaAlModuloDeRecruitment() {
+        reclutador.attemptsTo(
+                on(RecruitmentPage.RECRUITMENT_MENU)
+        );
+    }
+
     @Cuando("agrega un nuevo candidato con los siguientes datos:")
     public void agregaUnNuevoCandidatoConLosSiguientesDatos(DataTable dataTable) {
-        Map<String, String> candidateData = dataTable.asMap(String.class, String.class);
+        Map<String,String> datos = dataTable.asMap(String.class, String.class);
         reclutador.attemptsTo(
-                AddCandidate.withData(candidateData)
+                AddCandidate.withData(datos)
+        );
+    }
+
+    @Cuando("programa una entrevista para el candidato con título {string} y entrevistador {string}")
+    public void programaUnaEntrevistaParaElCandidato(String titulo, String entrevistador) {
+        reclutador.attemptsTo(
+                on(RecruitmentPage.SCHEDULE_INTERVIEW_BUTTON),
+                theValue(titulo).into(RecruitmentPage.INTERVIEW_TITLE),
+                theValue(entrevistador).into(RecruitmentPage.INTERVIEWER),
+                on(RecruitmentPage.SAVE_INTERVIEW_BUTTON)
+        );
+    }
+
+    @Cuando("marca la entrevista como aprobada")
+    public void marcaLaEntrevistaComoAprobada() {
+        reclutador.attemptsTo(
+                on(RecruitmentPage.MARK_INTERVIEW_PASSED)
+        );
+    }
+
+    @Cuando("hace una oferta de trabajo al candidato")
+    public void haceUnaOfertaDeTrabajoAlCandidato() {
+        reclutador.attemptsTo(
+                on(RecruitmentPage.OFFER_JOB_BUTTON)
+        );
+    }
+
+    @Cuando("contrata al candidato")
+    public void contrataAlCandidato() {
+        reclutador.attemptsTo(
+                on(RecruitmentPage.HIRE_BUTTON)
         );
     }
 
     @Entonces("el candidato debe aparecer con estado {string} en la lista")
-    public void elCandidatoDebeAparecerConEstadoEnLaLista(String expectedStatus) {
+    public void elCandidatoDebeAparecerConEstadoEnLaLista(String estadoEsperado) {
         reclutador.should(
                 seeThat("El estado del candidato",
                         CandidateStatus.of("oscar andres roa"),
-                        equalTo(expectedStatus))
+                        equalTo(estadoEsperado)
+                )
         );
     }
 }
