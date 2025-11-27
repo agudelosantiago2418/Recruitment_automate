@@ -68,10 +68,9 @@ public class RecruitmentSteps {
 
     @Cuando("programa una entrevista para el candidato")
     public void programaUnaEntrevistaParaElCandidato() {
-        reclutador.attemptsTo(
-                ScheduleInterview.withDetails()
-        );
+        reclutador.attemptsTo(ScheduleInterview.withDetails());
     }
+
 
     @Cuando("marca la entrevista como aprobada")
     public void marcaLaEntrevistaComoAprobada() {

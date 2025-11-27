@@ -51,8 +51,9 @@ public class RecruitmentPage {
     public static final Target SCHEDULE_INTERVIEW_BUTTON = Target.the("botón programar entrevista")
             .located(By.xpath("//button[contains(@class,'oxd-button oxd-button--medium oxd-button--success')]"));
 
-    public static final Target INTERVIEW_TITLE = Target.the("título entrevista")
-            .located(By.xpath("//label[text()='Interview Title']/following-sibling::div//input"));
+    // Campo Interview Title (input dentro de la ruta absoluta)
+    public static final Target INTERVIEW_TITLE = Target.the("campo Interview Title")
+            .located(By.xpath("//*[@id='app']/div[1]/div[2]/div[2]/div/div/form/div[2]/div/div[1]/div/div[2]/input"));
 
     public static final Target INTERVIEWER = Target.the("entrevistador")
             .located(By.xpath("//label[text()='Interviewer']/following-sibling::div//input"));
